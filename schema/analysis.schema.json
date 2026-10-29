@@ -1,0 +1,76 @@
+{
+  "$comment": "Single source of truth for PiCODE model output. Loaded by backend/prompts.py (sent to the model as a structured-output schema) and by js/schema-validator.js (validated again before rendering). The model returns ONE study note: highlighted bullet points first (selected text = CRITICAL_IMPORTANCE, re-read text = HIGH_RELEVANCE), then a summary with one sub-headed section per read page (short paragraphs + key points) whose depth follows the reader's attention.",
+  "version": 3,
+  "properties": {
+    "studyNote": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 150 },
+        "highlights": {
+          "type": "array",
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": { "type": "string", "maxLength": 300 },
+              "page": { "type": "integer", "minimum": 1 },
+              "importance": { "type": "string", "enum": ["CRITICAL_IMPORTANCE", "HIGH_RELEVANCE", "KEY_POINT"] },
+              "evidence": { "type": "string", "maxLength": 400 }
+            },
+            "required": ["text", "page", "importance", "evidence"]
+          }
+        },
+        "overview": { "type": "string", "maxLength": 1500 },
+        "sections": {
+          "type": "array",
+          "maxItems": 12,
+          "items": {
+            "type": "object",
+            "properties": {
+              "heading": { "type": "string", "maxLength": 150 },
+              "page": { "type": "integer", "minimum": 1 },
+              "depth": { "type": "string", "enum": ["deep", "standard", "brief"] },
+              "content": { "type": "string", "maxLength": 3000 },
+              "keyPoints": { "type": "array", "maxItems": 6, "items": { "type": "string", "maxLength": 300 } },
+              "evidence": { "type": "string", "maxLength": 400 },
+              "readerNote": { "type": "string", "maxLength": 500 },
+              "signal": { "type": "string", "enum": ["none", "selection", "reread", "revisit", "dwell"] }
+            },
+            "required": ["heading", "page", "depth", "content", "keyPoints", "evidence", "readerNote", "signal"]
+          }
+        },
+        "reviewLater": {
+          "type": "array",
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "properties": {
+              "page": { "type": "integer", "minimum": 1 },
+              "reason": { "type": "string", "maxLength": 300 },
+              "signal": { "type": "string", "enum": ["selection", "reread", "revisit", "dwell"] }
+            },
+            "required": ["page", "reason", "signal"]
+          }
+        },
+        "questions": {
+          "type": "array",
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "properties": {
+              "question": { "type": "string", "maxLength": 300 },
+              "answer": { "type": "string", "maxLength": 600 },
+              "page": { "type": "integer", "minimum": 1 },
+              "evidence": { "type": "string", "maxLength": 400 }
+            },
+            "required": ["question", "answer", "page", "evidence"]
+          }
+        }
+      },
+      "required": ["title", "highlights", "overview", "sections", "reviewLater", "questions"]
+    }
+  },
+  "tasks": {
+    "note": ["studyNote"]
+  }
+}

@@ -1,0 +1,4 @@
+# PiCODE backend dependencies (versions verified 2026-10-17 on Python 3.12)
+fastapi>=0.115    # HTTP API + static file serving for the frontend
+uvicorn>=0.30     # ASGI server that runs the FastAPI app on 127.0.0.1
+httpx>=0.27       # async HTTP client used to stream from the local model runtime (also used by tests)

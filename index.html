@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FlashPDF</title>
+  <meta name="description" content="FlashPDF — a local-first PDF reading companion powered by Gemma.">
+  <meta name="application-name" content="FlashPDF">
+  <meta name="apple-mobile-web-app-title" content="FlashPDF">
+  <meta name="theme-color" content="#f4f3ef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#16181c" media="(prefers-color-scheme: dark)">
+  <!-- Everything is served locally: no CDN, no analytics, no external fonts. -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; worker-src 'self' blob:; connect-src 'self'; font-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235466c0'/%3E%3Cpath d='M18 4l-8 14h6l-2 10 10-15h-6z' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="vendor/pdfjs/text-layer.css?v=5">
+  <link rel="stylesheet" href="styles/main.css?v=5">
+  <script src="js/theme-init.js?v=5"></script>
+  <script type="module" src="js/app.js?v=5"></script>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-open" viewBox="0 0 24 24"><path d="M4 20h16M12 4v12M7 9l5-5 5 5"/></symbol>
+      <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 5v16M8 7h7"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+      <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+      <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4l12 8-12 8z"/></symbol>
+      <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+      <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+      <symbol id="i-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
+      <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></symbol>
+      <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/></symbol>
+      <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8M4 4v4h4M4 13a8 8 0 0 0 14.3 4.9L20 16M20 20v-4h-4"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    </defs>
+  </svg>
+
+  <a class="skip-link" href="#viewer">Skip to document</a>
+
+  <div class="app" id="app">
+    <!-- Left: compact navigation -->
+    <nav class="sidebar" aria-label="Main">
+      <div class="brand" title="FlashPDF (by PiCODE)" style="font-weight:900;letter-spacing:-0.5px;font-size:18px;"><span aria-hidden="true" style="color:#5466c0;">⚡</span><span class="sr-only">FlashPDF</span></div>
+      <button class="nav-btn" id="btn-open" type="button" title="Open a PDF from your computer">
+        <svg class="icon"><use href="#i-open"/></svg><span>Open</span>
+      </button>
+      <input id="file-input" type="file" accept="application/pdf,.pdf" hidden>
+      <button class="nav-btn" id="btn-sample" type="button" title="Open the bundled sample PDF">
+        <svg class="icon"><use href="#i-book"/></svg><span>Sample</span>
+      </button>
+      <button class="nav-btn" id="btn-demo" type="button" title="Demo mode: simulated analysis on the sample PDF" aria-pressed="false">
+        <svg class="icon"><use href="#i-play"/></svg><span>Demo</span>
+      </button>
+      <div class="nav-spacer"></div>
+      <button class="nav-btn" id="btn-privacy" type="button" title="Privacy and your data">
+        <svg class="icon"><use href="#i-shield"/></svg><span>Privacy</span>
+      </button>
+      <button class="nav-btn" id="btn-settings" type="button" title="Model settings">
+        <span class="nav-icon"><svg class="icon"><use href="#i-cpu"/></svg><span class="nav-dot" id="model-dot" data-state="checking" aria-hidden="true"></span></span><span>Model</span>
+      </button>
+      <button class="nav-btn" id="btn-theme" type="button" title="Toggle light/dark theme">
+        <svg class="icon"><use href="#i-sun"/></svg><span>Theme</span>
+      </button>
+      <button class="nav-btn" id="btn-help" type="button" title="Help and setup guide">
+        <svg class="icon"><use href="#i-help"/></svg><span>Help</span>
+      </button>
+    </nav>
+
+    <!-- Center: the PDF reader -->
+    <main class="reader" aria-label="Document reader">
+      <header class="toolbar">
+        <div class="doc-title" id="doc-title" title="">No document open</div>
+        <div class="tool-group" role="group" aria-label="Page navigation">
+          <button class="icon-btn" id="btn-prev" type="button" aria-label="Previous page" disabled><svg class="icon"><use href="#i-left"/></svg></button>
+          <label class="page-input">
+            <span class="sr-only">Page number</span>
+            <input id="page-input" type="number" min="1" value="1" inputmode="numeric" disabled>
+            <span id="page-count" aria-live="polite">/ –</span>
+          </label>
+          <button class="icon-btn" id="btn-next" type="button" aria-label="Next page" disabled><svg class="icon"><use href="#i-right"/></svg></button>
+        </div>
+        <div class="tool-group" role="group" aria-label="Zoom">
+          <button class="icon-btn" id="btn-zoom-out" type="button" aria-label="Zoom out" disabled><svg class="icon"><use href="#i-minus"/></svg></button>
+          <span class="zoom-label" id="zoom-label" aria-live="polite">100%</span>
+          <button class="icon-btn" id="btn-zoom-in" type="button" aria-label="Zoom in" disabled><svg class="icon"><use href="#i-plus"/></svg></button>
+        </div>
+        <form class="search" id="search-form" role="search">
+          <svg class="icon search-icon" aria-hidden="true"><use href="#i-search"/></svg>
+          <label class="sr-only" for="search-input">Search in document</label>
+          <input id="search-input" type="search" placeholder="Search document" autocomplete="off" disabled>
+          <span class="search-count" id="search-count" aria-live="polite"></span>
+          <button class="icon-btn small" id="btn-search-prev" type="button" aria-label="Previous match" disabled><svg class="icon"><use href="#i-up"/></svg></button>
+          <button class="icon-btn small" id="btn-search-next" type="button" aria-label="Next match" disabled><svg class="icon"><use href="#i-down"/></svg></button>
+        </form>
+        <button class="tracking-pill" id="tracking-pill" type="button" data-state="off" aria-live="polite">
+          <span class="dot" aria-hidden="true"></span><span class="label">Tracking off</span>
+        </button>
+        <button class="icon-btn panel-toggle" id="btn-panel" type="button" aria-label="Show notes panel" aria-controls="panel" aria-expanded="false">
+          <svg class="icon"><use href="#i-panel"/></svg>
+        </button>
+      </header>
+
+      <div class="banners" id="banners" aria-live="polite"></div>
+
+      <div class="viewer" id="viewer" tabindex="0" aria-label="PDF pages">
+        <div class="empty-state" id="empty-state">
+          <div class="empty-card">
+            <h1>Read a PDF with FlashPDF. Get study notes from how you read.</h1>
+            <p>FlashPDF renders your PDF locally and, with your consent, notices what you select and what you scroll back to re-read. A local Gemma model turns that into one short, grounded study note with page references.</p>
+            <div class="empty-actions">
+              <button class="btn primary" type="button" data-action="open">Open a PDF</button>
+              <button class="btn" type="button" data-action="sample">Try the sample document</button>
+            </div>
+            <p class="muted small">Or drop a PDF anywhere on this window. Files never leave your computer.</p>
+          </div>
+        </div>
+        <div class="pages" id="pages"></div>
+      </div>
+      <div class="drop-overlay" id="drop-overlay" hidden><div>Drop PDF to open</div></div>
+    </main>
+
+    <!-- Right: AI notes and reading insights -->
+    <aside class="panel" id="panel" aria-label="Notes and insights">
+      <div class="panel-head">
+        <div class="wordmark" role="img" aria-label="FlashPDF"><span style="color:#5466c0;font-weight:800;font-size:16px;">Flash</span><span style="font-weight:700;font-size:16px;">PDF</span> <span style="font-size:11px;opacity:0.6;font-weight:normal;margin-left:6px;">by PiCODE</span></div>
+        <button class="icon-btn small panel-close" id="btn-panel-close" type="button" aria-label="Close panel"><svg class="icon"><use href="#i-x"/></svg></button>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Panel sections">
+        <button role="tab" id="tab-notes" aria-controls="view-notes" aria-selected="true">AI notes</button>
+        <button role="tab" id="tab-saved" aria-controls="view-saved" aria-selected="false" tabindex="-1">Saved <span class="count" id="saved-count"></span></button>
+        <button role="tab" id="tab-session" aria-controls="view-session" aria-selected="false" tabindex="-1">Session</button>
+      </div>
+
+      <section class="tab-view" id="view-notes" role="tabpanel" aria-labelledby="tab-notes">
+        <div class="analyze-box">
+          <button class="btn primary block" id="btn-analyze" type="button" disabled>
+            <svg class="icon"><use href="#i-sparkle"/></svg><span>Create study note</span>
+          </button>
+          <button class="btn block resume-tracking-btn" id="btn-resume-tracking" type="button" style="margin-top: 8px; display: none; align-items: center; justify-content: center; gap: 6px; font-weight: 500;">
+            <span style="width:8px;height:8px;border-radius:50%;background:#1f8a4c;display:inline-block;"></span>
+            <span>Resume tracking &amp; continue reading</span>
+          </button>
+          <label class="check"><input type="checkbox" id="opt-include-notes"> Include my saved notes as context</label>
+          <details class="context-preview" id="context-preview">
+            <summary>Preview what will be sent to the model</summary>
+            <pre id="context-preview-body">Open a document first.</pre>
+          </details>
+          <div class="progress" id="analysis-progress" hidden>
+            <div class="progress-row"><span class="spinner" aria-hidden="true"></span><span id="progress-text">Working…</span></div>
+            <div class="progress-row muted small"><span id="progress-time">0s</span><button class="link-btn" id="btn-cancel" type="button">Cancel</button></div>
+          </div>
+        </div>
+        <div id="notes-body" class="notes-body"></div>
+      </section>
+
+      <section class="tab-view" id="view-saved" role="tabpanel" aria-labelledby="tab-saved" hidden>
+        <div class="saved-actions">
+          <button class="btn small" id="btn-add-note" type="button" disabled><svg class="icon"><use href="#i-plus"/></svg>Add note</button>
+          <div class="spacer"></div>
+          <button class="btn small" id="btn-copy-md" type="button" disabled>Copy</button>
+          <button class="btn small" id="btn-export-md" type="button" disabled>Markdown</button>
+          <button class="btn small" id="btn-export-json" type="button" disabled>JSON</button>
+        </div>
+        <div id="saved-body"></div>
+      </section>
+
+      <section class="tab-view" id="view-session" role="tabpanel" aria-labelledby="tab-session" hidden>
+        <div id="session-body"></div>
+      </section>
+    </aside>
+    <div class="scrim" id="scrim" hidden></div>
+  </div>
+
+  <!-- Floating action shown next to a text selection -->
+  <div class="selection-pop" id="selection-pop" hidden>
+    <button class="btn small primary" id="btn-save-selection" type="button">Save as note</button>
+  </div>
+
+  <!-- Consent (first use) -->
+  <dialog id="dlg-consent" aria-labelledby="consent-title">
+    <form method="dialog" class="dialog">
+      <h2 id="consent-title">Before you start reading with FlashPDF</h2>
+      <p>FlashPDF can use a few reading signals to personalise your notes. With your permission it records, <strong>only inside the PDF viewer</strong>:</p>
+      <ul class="tick-list">
+        <li>Text you select with the mouse (click and drag), with its page and paragraph — treated as most important.</li>
+        <li>Scrolling speed and direction, to ignore fast scrolling and to recognise re-reading — scrolling back up over lines you just read.</li>
+        <li>Which pages you read, approximate time on each, and pages you return to. Anything under one second is ignored.</li>
+      </ul>
+      <p>Mouse movement, pointer position and hovering are <strong>not</strong> tracked.</p>
+      <p>It never records keystrokes, clipboard contents, your screen, other tabs or other apps. Data is stored in this browser and sent only to your local model endpoint when you click <em>Create study note</em>.</p>
+      <p class="muted small">These signals are observations, not conclusions. Engine: PiCODE local-first AI.</p>
+      <div class="dialog-actions">
+        <button class="btn" value="decline" type="submit">Read without tracking</button>
+        <button class="btn primary" value="accept" type="submit">Allow reading signals</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Privacy and data controls -->
+  <dialog id="dlg-privacy" aria-labelledby="privacy-title">
+    <div class="dialog">
+      <div class="dialog-head"><h2 id="privacy-title">Privacy &amp; your data</h2><button class="icon-btn small" data-close type="button" aria-label="Close"><svg class="icon"><use href="#i-x"/></svg></button></div>
+      <div id="privacy-body"></div>
+    </div>
+  </dialog>
+
+  <!-- Model settings -->
+  <dialog id="dlg-settings" aria-labelledby="settings-title">
+    <form class="dialog" id="settings-form">
+      <div class="dialog-head"><h2 id="settings-title">Model settings</h2><button class="icon-btn small" data-close type="button" aria-label="Close"><svg class="icon"><use href="#i-x"/></svg></button></div>
+      <p class="muted small">PiCODE's backend forwards analysis requests to this runtime. Gemma 4 is the intended model; whatever model you configure is shown by its real name on every result.</p>
+      <label class="field"><span>Runtime</span>
+        <select id="cfg-runtime"><option value="ollama">Ollama (native API)</option><option value="openai">OpenAI-compatible server (llama.cpp, LM Studio, vLLM)</option></select>
+      </label>
+      <label class="field"><span>Base URL</span><input id="cfg-base" type="url" required placeholder="http://127.0.0.1:11434"></label>
+      <label class="field"><span>Model identifier</span><input id="cfg-model" type="text" required placeholder="gemma4:12b" list="cfg-models"><datalist id="cfg-models"></datalist></label>
+      <div class="remote-warning" id="cfg-remote-warning" hidden>This endpoint is not on this computer. PDF excerpts and reading signals would leave your device; PiCODE will ask for confirmation before every analysis.</div>
+      <div class="status-box" id="cfg-status" aria-live="polite"></div>
+      <div class="dialog-actions">
+        <button class="btn" id="btn-test" type="button">Test connection</button>
+        <button class="btn primary" type="submit">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Help / setup -->
+  <dialog id="dlg-help" aria-labelledby="help-title">
+    <div class="dialog wide">
+      <div class="dialog-head"><h2 id="help-title">Help &amp; setup</h2><button class="icon-btn small" data-close type="button" aria-label="Close"><svg class="icon"><use href="#i-x"/></svg></button></div>
+      <h3>Demo flow</h3>
+      <ol>
+        <li>Open the sample (or your own PDF) and allow reading signals.</li>
+        <li>Read a few pages, select a passage, go back to an earlier page.</li>
+        <li>Check the <strong>Session</strong> tab to see exactly what was recorded.</li>
+        <li>Click <strong>Create study note</strong>. Gemma 4 writes one continuous note; pages you spent the most time on get the most detailed sections. Click a page badge or quote to jump to its source.</li>
+        <li>Save the note and export it as Markdown or JSON.</li>
+      </ol>
+      <h3>Running Gemma 4 locally</h3>
+      <p>PiCODE was verified with <a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> and the <code>gemma4:12b</code> model. In a terminal:</p>
+      <pre>ollama pull gemma4:12b
+ollama serve</pre>
+      <p>Then open <em>Model settings</em>, keep <code>http://127.0.0.1:11434</code> and <code>gemma4:12b</code>, and click <em>Test connection</em>. Run <code>ollama list</code> to see which tags you have. The 12B model needs roughly 8&nbsp;GB of memory; the first analysis loads the model and can take one to two minutes.</p>
+      <p>Any OpenAI-compatible local server works too (choose that runtime in settings). Such servers do not report a model family, so PiCODE can only check the model name.</p>
+      <h3>Keyboard</h3>
+      <ul><li><kbd>←</kbd>/<kbd>→</kbd> or <kbd>PgUp</kbd>/<kbd>PgDn</kbd> in the viewer: previous / next page</li><li><kbd>/</kbd>: search &nbsp; <kbd>Esc</kbd>: clear search, close panels</li><li><kbd>+</kbd>/<kbd>-</kbd> in the viewer: zoom</li></ul>
+    </div>
+  </dialog>
+
+  <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+</body>
+</html>
