@@ -14,7 +14,7 @@ Covers:
 - **Context:** selections and re-reads force `deep`, weights (selection > re-read > reading time), critical passages listed before high-relevance ones, unread pages left out, size limits, excerpt centring (Turkish-safe).
 - **Validation & grounding:** schema (including rejected pointer signals), Turkish-aware quote matching, highlight labels downgraded when the behaviour wasn't observed, missing selections added as critical bullets, measured depth, reader-note checks, the demo note against the real Turkish sample PDF.
 - **Storage & export:** IndexedDB notes and per-document deletion; one-time migration from the pre-rename `focusnote` database; Markdown export as one block (highlights → sub-headed summary of short paragraphs → sources).
-- **UI:** the Summary accordion (open by default, `aria-expanded`/`inert` toggling, smooth grid-row transition, state kept across re-renders), short-paragraph splitting, and branding (PiCODE title and wordmark, no model-status pill, no leftover "FocusNote").
+- **UI:** the Summary accordion (open by default, `aria-expanded`/`inert` toggling, smooth grid-row transition, state kept across re-renders), short-paragraph splitting, and branding (FlashPDF title and wordmark, no model-status pill, no leftover "FocusNote").
 
 Tests use a throw-away IndexedDB database (`picode-test-…`) and never touch your real data.
 

@@ -220,7 +220,7 @@
         <select id="cfg-runtime"><option value="ollama">Ollama (native API)</option><option value="openai">OpenAI-compatible server (llama.cpp, LM Studio, vLLM)</option></select>
       </label>
       <label class="field"><span>Base URL</span><input id="cfg-base" type="url" required placeholder="http://127.0.0.1:11434"></label>
-      <label class="field"><span>Model identifier</span><input id="cfg-model" type="text" required placeholder="gemma4:12b" list="cfg-models"><datalist id="cfg-models"></datalist></label>
+      <label class="field"><span>Model identifier</span><input id="cfg-model" type="text" required placeholder="gemma4:e2b" list="cfg-models"><datalist id="cfg-models"></datalist></label>
       <div class="remote-warning" id="cfg-remote-warning" hidden>This endpoint is not on this computer. PDF excerpts and reading signals would leave your device; PiCODE will ask for confirmation before every analysis.</div>
       <div class="status-box" id="cfg-status" aria-live="polite"></div>
       <div class="dialog-actions">
@@ -243,10 +243,10 @@
         <li>Save the note and export it as Markdown or JSON.</li>
       </ol>
       <h3>Running Gemma 4 locally</h3>
-      <p>PiCODE was verified with <a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> and the <code>gemma4:12b</code> model. In a terminal:</p>
-      <pre>ollama pull gemma4:12b
+      <p>For local analysis, install <a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a> and download the default model. In a terminal:</p>
+      <pre>ollama pull gemma4:e2b
 ollama serve</pre>
-      <p>Then open <em>Model settings</em>, keep <code>http://127.0.0.1:11434</code> and <code>gemma4:12b</code>, and click <em>Test connection</em>. Run <code>ollama list</code> to see which tags you have. The 12B model needs roughly 8&nbsp;GB of memory; the first analysis loads the model and can take one to two minutes.</p>
+      <p>Then open <em>Model settings</em>, keep <code>http://127.0.0.1:11434</code> and <code>gemma4:e2b</code>, and click <em>Test connection</em>. Run <code>ollama list</code> to see which tags you have. Memory use and analysis time depend on the selected model and your hardware.</p>
       <p>Any OpenAI-compatible local server works too (choose that runtime in settings). Such servers do not report a model family, so PiCODE can only check the model name.</p>
       <h3>Keyboard</h3>
       <ul><li><kbd>←</kbd>/<kbd>→</kbd> or <kbd>PgUp</kbd>/<kbd>PgDn</kbd> in the viewer: previous / next page</li><li><kbd>/</kbd>: search &nbsp; <kbd>Esc</kbd>: clear search, close panels</li><li><kbd>+</kbd>/<kbd>-</kbd> in the viewer: zoom</li></ul>

@@ -4,7 +4,7 @@ The rest of PiCODE only uses `status()` and `stream_chat()`, so switching
 inference runtimes means adding an adapter here, not touching the UI.
 
 - OllamaAdapter: Ollama's native API (/api/tags, /api/show, /api/chat).
-  Verified with Ollama 0.40.5 and the `gemma4:12b` model (family "gemma4").
+  Model family is read from Ollama metadata.
 - OpenAICompatAdapter: any server exposing /v1/models and /v1/chat/completions
   (e.g. llama.cpp's llama-server, LM Studio, vLLM). Such servers do not report
   a model family, so Gemma 4 can only be inferred from the model id and is
@@ -43,7 +43,7 @@ class ModelConfig:
     base_url: str = "http://127.0.0.1:11434"
     model: str = "gemma4:e2b"
     timeout_s: float = 300.0           # max wait between streamed chunks
-    num_ctx: int = 4096                # optimized context size for <20s generation speed
+    num_ctx: int = 4096                # Ollama context window
     api_key: str = field(default="", repr=False)  # backend-only, never sent to the browser
 
 

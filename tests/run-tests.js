@@ -553,11 +553,11 @@ test('AI notes: summary is an accordion that toggles smoothly and keeps its stat
   }
 });
 
-test('branding: PiCODE everywhere, no model-status pill in the header', async () => {
+test('branding: FlashPDF title and wordmark, no model-status pill in the header', async () => {
   const html = await (await fetch('../', { cache: 'no-store' })).text();
   ok(!/FocusNote/i.test(html), 'no FocusNote left in the page');
-  ok(html.includes('<title>PiCODE</title>'));
-  ok(html.includes('class="wordmark"'), 'PiCODE wordmark in the header');
+  ok(html.includes('<title>FlashPDF</title>'));
+  ok(html.includes('class="wordmark"') && html.includes('aria-label="FlashPDF"'), 'FlashPDF wordmark in the header');
   ok(!html.includes('model-pill'), 'model status pill removed');
   for (const f of ['../js/app.js', '../js/notes-panel.js', '../js/local-storage.js', '../js/export.js']) {
     const src = await (await fetch(f, { cache: 'no-store' })).text();

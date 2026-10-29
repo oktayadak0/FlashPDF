@@ -8,7 +8,7 @@ rem
 rem  1. Python 3.10+ (yoksa winget ile Python 3.12 kurar)
 rem  2. .venv sanal ortami + backend\requirements.txt paketleri
 rem  3. Ollama (yoksa winget ile kurar) ve Ollama sunucusu
-rem  4. Gemma 4 modeli (yoksa indirir, yaklasik 8 GB)
+rem  4. Secili modelin kurulu olup olmadigini kontrol eder
 rem  5. PiCODE sunucusu + tarayicida http://127.0.0.1:8000
 rem
 rem  Secenekler:

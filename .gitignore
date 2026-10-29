@@ -1,0 +1,41 @@
+# Python environments and generated files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local settings and credentials
+.env
+.env.*
+!.env.example
+backend/picode.config.json
+backend/focusnote.config.json
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Personal documents and exports
+*.pdf
+!samples/kalici-ogrenme.pdf
+private/
+uploads/
+exports/
+local-data/
+
+# Tools and generated artifacts
+.tools/
+node_modules/
+*.log
+FlashPDF-github.zip
+
+# OS and editor metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
